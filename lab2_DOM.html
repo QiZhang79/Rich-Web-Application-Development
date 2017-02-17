@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- Modify Title between these comments (Choose correct class number and substitute your username) -->
+	<title>ITMD 465/565 Lab 2 - qzhang79@hawk.iit.edu - DOM Manipulation</title>
+	<!-- Modify Title between these comments -->
+	<style type="text/css">
+		body {
+			background-color: #ccc;
+			font-family: sans-serif;
+		}
+		label {
+			width: 100px;
+			display: inline-block;
+			margin: 5px 0;
+		}
+		input {
+			display: inline-block;
+			margin: 5px 0;
+		}
+		button {
+			display: inline-block;
+			margin: 20px 10px 20px 0;
+		}
+		#wrapper {
+			background-color: #fff;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px 40px;
+		}
+		#resultsWrapper .result {
+			border: 4px solid red;
+			padding: 10px;
+			margin: 10px 0;
+		}
+		#resultsWrapper .red {
+			border-color: red;
+		}
+		#resultsWrapper .red h2 {
+			color: red;
+		}
+		#resultsWrapper .green {
+			border-color: green;
+		}
+		#resultsWrapper .green h2 {
+			color: green;
+		}
+		#resultsWrapper .blue {
+			border-color: blue;
+		}
+		#resultsWrapper .blue h2 {
+			color: blue;
+		}
+		/* You may add additional CSS below this comment if you feel necessary */
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- Modify headlines between these comments (Choose correct class number and substitute Name and Email) -->
+		<h1>ITMD 565 - Lab 2 - DOM Manipulation</h1>
+		<h2>Qi Zhang - qzhang79@hawk.iit.edu</h2>
+		<!-- Modify headlines between these comments -->
+		<label for="bodyInput">Body Text: </label><input id="bodyInput" type="text"><br>
+		<label for="qtyInput">Quantity: </label><input id="qtyInput" type="text"><br>
+		<label for="colorInput">Color: </label>
+		<select id="colorInput">
+			<option value="red">Red</option>
+			<option value="green">Green</option>
+			<option value="blue">Blue</option>
+		</select><br>
+
+		<button id="runBtn">Run Lab</button>
+		<button id="resetBtn">Reset Lab</button>
+
+		<h2>Results</h2>
+		<div id="resultsWrapper"></div>
+	</div>
+
+	<script type="text/javascript">
+		// Begin JavaScript Code Here - Do not put JavaScript outside these comments.
+		document.addEventListener("DOMContentLoaded", function(){
+			console.log('dom loaded');
+
+			//Run lab
+			function runBtnClick(){
+				var inp1 = document.getElementById('bodyInput').value;
+				var inp2 = document.getElementById('qtyInput').value;
+
+				if (inp1.trim() === ''|| inp2.trim() === ''){
+					alert('Input can not be empty!');
+					document.getElementById('resetBtn').removeAttribute('disabled');
+					return;//以防后面会用到return的值
+				}else if (isNaN(Number(inp2))){
+					alert('Quality should be a number');
+					return;
+				}else if (Number(inp2) <= 0){
+					alert('Quality must be a positive number!');
+					return;
+				}else{
+
+					var results = document.getElementById('resultsWrapper');
+					var select = document.getElementById('colorInput');
+					// clear results our
+					results.innerHTML = ''
+					//begin loop
+					for(i = 0; i < Number(inp2); i++){    //i=1, 后面不需要再加1了
+						var contentWrapper = document.createElement('div');
+						contentWrapper.setAttribute('class',select.value);
+						contentWrapper.setAttribute('style','border:solid; padding: 10px; margin-bottom: 10px;')
+						contentWrapper.style.borderColor = select.value;
+			      contentWrapper.id = 'id' + i;
+						results.appendChild(contentWrapper);
+
+						//h2
+						var h1 = document.createElement('h2');
+						var h1text = document.createTextNode('Output '+ Number(i+1));
+						h1.appendChild(h1text);
+						contentWrapper.appendChild(h1);
+
+						//h2 color
+						if (select.value == 'green'){
+							h1.style.color = 'green';
+						}else if(select.value == 'blue'){
+							h1.style.color = 'blue';
+						}else{
+							h1.style.color = 'red';
+						}
+
+						//paragraph
+						var p1 = document.createElement('p');
+						var p1text = document.createTextNode(document.getElementById('bodyInput').value);
+						p1.appendChild(p1text);
+						contentWrapper.appendChild(p1);
+
+						results.appendChild(contentWrapper);
+					}//end 'for'
+					//disabled reset button
+					var inp1 = document.getElementById('bodyInput').value;
+					var inp2 = document.getElementById('qtyInput').value;
+					inp1 = '';
+					inp2 = '';
+					document.getElementById('resetBtn').removeAttribute('disabled');
+				}//end 'else'
+			}//end function
+
+			//Reset lab
+			function resetBtnClick(){
+				document.getElementById('resultsWrapper').innerHTML = '';
+				document.getElementById('bodyInput').value = '';
+				document.getElementById('qtyInput').value = '';
+				document.getElementById('colorInput').value = 'red';
+				document.getElementById('resetBtn').setAttribute('disabled','disabled');
+			}
+
+			//Attach Events
+			document.getElementById('runBtn').addEventListener('click', runBtnClick, false);
+			document.getElementById('resetBtn').addEventListener('click', resetBtnClick, false);
+
+			}, false);
+
+
+
+
+		// End JavaScript Code Here - Do not put JavaScript outside these comments.
+	</script>
+</body>
+</html>
