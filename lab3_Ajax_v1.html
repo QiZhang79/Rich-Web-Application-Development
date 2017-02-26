@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ITMD 565 Lab 3 - qzhang79 - AJAX and JSON</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+		body {
+			background-color: #fdedf5;
+			font-size: 16px;
+			font-weight: 400;
+			font-family: sans-serif;
+		}
+		#whole-container {
+			width: 750px;
+			background-color: #fdedf5;
+			margin:0 auto;
+			text-align: center;
+			padding: 10px;
+		}
+		.table {
+			font-size: 13px;
+			width: 100%;
+				background: white;
+				border-radius: 3px;
+				border-collapse: collapse;
+				margin: auto;
+				padding: 5px;
+				box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+		}
+		.true
+		{
+			background-color: green;
+		}
+		td.inactive {
+   		background-color:#a6d8ff;
+   }
+	</style>
+
+</head>
+<body>
+	<div id="whole-container">
+		<h1><font color='#ef84b9'>ITMD 565 - Lab 3 </font></h1>
+		<h2><font color='#ef84b9'>Qi Zhang - qzhang79@hawk.iit.edu</font></h2>
+
+		<div id="load-wrapper">
+			<div id="button-wrapper">
+				<button id="loadBtn">Load Data</button>
+				<button id="resetBtn">Reset</button>
+			</div>
+
+			<div><font color='#ef84b9'><h2>Employee list</h2></font></div>
+			<table id="table" class="table table-bordered table-striped">
+				<tr>
+					<td>ID</td>
+					<td>First Name</td>
+					<td>Last Name</td>
+					<td>Title</td>
+					<td>Email</td>
+					<td>Gender</td>
+					<td>Active</td>
+				</tr>
+			</table>
+
+	</div>
+
+	<table class="table table-bordered table-striped" id="results"></table>
+	<script type="text/javascript">
+
+	//// Ajax ////
+	function createXHR(){
+		if (typeof XMLHttpRequest != "undefined") {
+			return new XMLHttpRequest();
+		} else if (typeof ActiveXObject != "undefined") {
+			if (typeof arguments.callee.activeXString != "String") {
+					var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"], i , len;
+					for (var i = 0, len = versions.length; i < len; i++){
+					try {
+							new ActiveXObject(versions[i]);
+							arguments.callee.activeXString = versions[i];
+							break;
+						}
+						catch (error) {
+							alert("sorry, something is error!");
+					}
+			 	}
+	 	 	}
+		 	return new ActiveXObject(arguments.callee.activeXString);
+ 		} else {
+			throw new Error("No XHR object available.");
+		}
+	}
+
+	function startRequest(xhr, method, url, state_change_handler){
+		try{
+			xhr.onreadystatechange = state_change_handler;
+			xhr.open(method, url, true);
+			xhr.send();
+		} catch(exception){
+			alert('Wrong!');
+		}
+	}
+	//////////////
+
+	//// table ////
+	function createTable(table, tableData) {
+		var jsonObj = JSON.parse(tableData);
+
+		var tableHeader = '<tr><th>ID</td>'+'<td>Gender</th>'+'<td>First Name</th>'
+				+'<td>Last Name</th>'+'<td>Title</th>'+'<td>Email</th>'+'<td>Active</th></tr>';
+
+		var tableBody = '';
+		for(var line of jsonObj) {
+			tableBody += '<tr>';
+			tableBody += '<td>'+line.id+'</td>' + '<td>'+line.gender+'</td>'
+					+ '<td>'+line.first_name+'</td>' + '<td>'+line.last_name+'</td>' + '<td>'+line.title+'</td>'
+					+ '<td>'+line.email+'</td>'
+			if(line.active) {
+				tableBody +='<td >'+line.active+'</td>';
+			}else {
+				tableBody +='<td class="inactive">'+line.active+'</td>';
+			}
+			tableBody += '</tr>';
+		}
+
+		var tableHTML = tableHeader + tableBody;
+		table.innerHTML = tableHTML;
+	}
+
+	function clearTable(table) {
+		table.innerHTML = "";
+	}
+	///////////////
+
+	//// control ////
+	// varaibles defined
+	var xmlHttpReq = createXHR();
+	var loadButton = document.getElementById('loadBtn');
+	var resetButton = document.getElementById('resetBtn');
+	var table = document.getElementById('table');
+
+	//Disable reset button on load
+  resetButton.setAttribute('disabled', true); 	// or    resetButton.disabled = true;
+
+	// loadBtn
+	function loadDataButtonClicked() {
+		startRequest(xmlHttpReq, 'GET', 'http://libertyville.rice.iit.edu/scripts/4565_lab3.php', dataLoadedCallback);
+	}
+
+	// resetBtn
+	function resetDataButtonClicked() {
+		//clearTable(table);
+		var tableHeader = "<tr>"+"<td>ID</td>"+"<td>First Name</td>"+"<td>Last Name</td>"
+					+"<td>Title</td>"+"<td>Email</td>"+"<td>Gender</td>"+"<td>Active</td>"+"</tr>";
+		var table = document.getElementById("table");
+
+		table.innerHTML = tableHeader;
+		document.getElementById("resetBtn").disabled = "true";
+	}
+
+
+	// xhr success and call back
+	function dataLoadedCallback() {
+		if (xmlHttpReq.readyState === 4 && xmlHttpReq.status === 200) {
+			// console.log(xmlHttpReq.responseText);
+			createTable(table, xmlHttpReq.responseText);
+
+			//  load success and reset and again
+			resetButton.removeAttribute('disabled');
+		}
+	}
+
+	// bind
+	loadButton.addEventListener('click', loadDataButtonClicked);
+	resetButton.addEventListener('click', resetDataButtonClicked);
+	/////////////////
+
+	</script>
+</div>
