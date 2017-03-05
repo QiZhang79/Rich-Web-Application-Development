@@ -1,0 +1,25 @@
+body {
+	background-color: #fdedf5;
+	font-size: 16px;
+	font-weight: 400;
+	font-family: sans-serif;
+	}
+
+#whole-container {
+	width: 750px;
+	background-color: #fdedf5;
+	margin:0 auto;
+	text-align: center;
+	padding: 10px;
+	}
+	
+.table {
+	font-size: 13px;
+	width: 100%;
+	background: white;
+	border-radius: 3px;
+	border-collapse: collapse;
+	margin: auto;
+	padding: 5px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+	}
