@@ -23,3 +23,24 @@ body {
 	padding: 5px;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 	}
+#subinput{
+	width: 20%;
+}
+#mesinput{
+	width: 30%;
+}
+#nameinput{
+	width:25%;
+}
+.detail{
+	display:none;
+}
+.detail td{
+	border:none;
+}
+.detail input{
+	width: 80%;
+}
+.detail .confirm{
+	display:none;
+}
