@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>qzhang79 project</title>
-  <link rel="stylesheet" href="css/main.css" media="all">
-  <script src="js/main.js" async></script>
+    <meta charset="utf-8">
+    <title>notelist project</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css" media="all">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script src="js/main.js"></script>
 </head>
 <body>
   <div id="whole-container">
-    <h1><font color='#ef84b9'>ITMD 565 - Project 1 </font></h1>
+     <h1><font color='#ef84b9'>ITMD 565 - Project 1 </font></h1>
+    <h1 style="color:#ef84b9;">Note list</h1>
     <h2><font color='#ef84b9'>Qi Zhang - qzhang79@hawk.iit.edu</font></h2>
-
+   
     <div id="inputwrapper">
-      <input type="text" id="subinput" placeholder="Subject..."></input>
-      <input type="text" id="mesinput" placeholder="Message..."></input>
-      <input type="text" id="nameinput" placeholder="Name..."></input>
-      <button id="addBtn">Add</button>
-      <button id='cleBtn'>Clear</button>
+      <input type="text" id="subinput" placeholder="Subject..."/>
+      <input type="text" id="mesinput" placeholder="Message..."/>
+      <input type="text" id="nameinput" placeholder="Name..."/>
+      <button id="addBtn" class="btn btn-info">Add</button>
+      <button id='cleBtn' class="btn btn-general">Clear</button>
     </div>
     
     <div>
-      <font color='#ef84b9'><h2>Note list</h2></font>
+      <h2 style="color:#ef84b9;">List Table</h2>
     </div>
     <table id="table" class="table table-bordered table-striped">
-      <tr>
-        <td>No.</td>
-        <td>Subject</td>
-        <td>Date</td>
-        <td>Words</td>
-        <td>Operation</td>
-      </tr>
+        <tr>
+            <th width="10%;">No.</th>
+            <th width="25%;">Subject</th>
+            <th width="30%;">Date</th>
+            <th width="10%;">Words</th>
+            <th width="25%;">Operation</th>
+        </tr>
     </table>
   </div>
 </body>
