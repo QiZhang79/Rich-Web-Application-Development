@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ITMD-4/565 Lab 3 - Canvas Drawing</title>
+	<style type="text/css">
+		#content-wrapper {
+			width: 600px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		#canvasRun {
+			background-color: #c00;
+			border: 0;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="content-wrapper" style="margin:0 auto;width:200px;">
+		<button id="canvasRun">Draw Canvas</button><br><br>
+		<canvas id="myCanvas" width="600" height="450"></canvas>
+	</div>
+	<script type="text/javascript">
+		// Canvas Drawing Code Here
+		var canvas = window.document.getElementById("myCanvas"); 
+		var width = canvas.width;
+		var height = canvas.height;
+		var ctx = canvas.getContext("2d");
+
+		var size = width / 12;
+		
+		var headerConfig = { 
+			text: "ITMD 565 Canvas Lab", 
+			color: "#C80000", 
+			font: "32px sans-serif" 
+		}
+
+		var circleParams = {
+			strokeColor: "#FFFFFF",
+			fillColor: "#0000C8",
+			position: {
+				x: width / 2 - 4 * size,
+				y: height / 2 - size
+			},
+		};
+
+		var arcParams = {
+			angle: Math.PI * 0.8,
+			color: "#FFA500",
+			position: {
+				x: width / 2,
+				y: height / 2 - size
+			},
+			width: 20,
+			speed: 60
+		}
+
+		var rectParams = {
+			fillColor: "#C80000",
+			speed: arcParams.speed * 0.1,
+			strokeColor: "#FFFFFF",
+			strokeWidth: 5,
+			position: { 
+				x: width / 2 + 4 * size, 
+				y: height / 2 - size 
+			}		
+		}
+
+		var triangleParams = {
+			 fillColor: "#00C800", 
+			 position: { 
+				 x: width / 2 - 4 * size, 
+				 y: height / 2 + (1 + Math.sqrt(2)) * size 
+			},
+			edges: []
+		}
+		var angle = Math.PI / 6;
+		var n = 3;
+		for(var i = 0; i < n; i++){
+			angle += Math.PI * 2 / n;
+			var x = Math.sqrt(2) * size * Math.cos(angle) + triangleParams.position.x; 
+			var y = Math.sqrt(2) * size * Math.sin(angle) + triangleParams.position.y;
+			triangleParams.edges.push({x: x, y: y});
+		}
+
+		var curveParams = {
+			rect: {
+				x: width / 2 - size * 0.5,
+				y: height / 2 + size,
+				height: 2 * size,
+				width: 6 * size
+			},
+			fillColor: "#FFFFFF",
+			strokeColor: "#000000",
+			lineDash: [10, 10]
+		}
+
+		var nameParams = { 
+			name: "Name Here", 
+			email: "email@example.com",
+			color: "#FFFFFF", 
+			font: "14px sans-serif" 
+		}
+
+		var logo = new Image();
+		logo.src = "IIT_SAT_stack_186_white.png";
+
+		function draw(){
+			// clear cancas
+			ctx.clearRect(0, 0, width, height);
+
+			// fill with gradient
+			var gradient = ctx.createLinearGradient(0, 0, 0, height);
+			gradient.addColorStop(0, 'white'); 
+			gradient.addColorStop(1, 'black');
+			ctx.fillStyle = gradient; 
+			ctx.fillRect(0, 0, width, height);
+
+			// draw header
+			ctx.font = headerConfig.font; 
+			ctx.fillStyle = headerConfig.color;
+			ctx.strokeStyle = headerConfig.color;
+			ctx.lineWidth = 5;
+			ctx.textAlign = "center";
+			ctx.fillText(headerConfig.text, width / 2, 50);
+
+			// draw header line
+			ctx.beginPath();
+			ctx.moveTo(10, 64);
+			ctx.lineTo(width - 10, 64);
+			ctx.stroke();
+
+			// draw circle
+			ctx.beginPath();
+			ctx.arc(circleParams.position.x, circleParams.position.y, size, 0, 2 * Math.PI, false); 
+			ctx.fillStyle = circleParams.fillColor; 
+			ctx.fill();
+			ctx.lineWidth = 5; 
+			ctx.strokeStyle = circleParams.strokeColor; 
+			ctx.stroke();
+
+			// draw animated arc
+			ctx.beginPath(); 
+			var time = new Date();
+			// calculate current angle based on current time and rotation speed
+			var currentAngle = ((2 * Math.PI) / 60) * time.getSeconds() + ((2 * Math.PI) / 60000) * time.getMilliseconds();
+			var arcAngle = currentAngle * arcParams.speed;
+			ctx.arc(arcParams.position.x, arcParams.position.y, size, arcAngle, arcAngle + arcParams.angle, false); 
+			ctx.lineWidth = arcParams.width; 
+			ctx.strokeStyle = arcParams.color;
+			ctx.stroke();
+
+			// draw animated rectangle
+			// save context to restore after transforms are applied
+			ctx.save();
+			ctx.lineWidth = rectParams.strokeWidth; 
+			ctx.strokeStyle = rectParams.strokeColor;
+			ctx.fillStyle = rectParams.fillColor;
+			ctx.translate(rectParams.position.x, rectParams.position.y);
+			ctx.rotate(currentAngle * rectParams.speed);
+			ctx.fillRect(-size, -size, 2 * size, 2 * size);
+			ctx.strokeRect(-size, -size, 2 * size, 2 * size);
+			// restore transforms, colors etc
+			ctx.restore();
+
+			// draw triangle
+			ctx.fillStyle = triangleParams.fillColor;			
+			ctx.beginPath();
+			ctx.moveTo(triangleParams.edges[0].x, triangleParams.edges[0].y);
+			for(var i = 1; i < triangleParams.edges.length; i++){
+				ctx.lineTo(triangleParams.edges[i].x, triangleParams.edges[i].y);
+			}
+			ctx.fill();
+
+			// draw curve
+			// draw rect
+			ctx.save();
+			ctx.strokeStyle = curveParams.strokeColor; 
+			ctx.lineWidth = 3;
+			ctx.fillStyle = curveParams.fillColor;			
+			ctx.setLineDash(curveParams.lineDash);
+			ctx.fillRect(
+				curveParams.rect.x,
+				curveParams.rect.y,
+				curveParams.rect.width,				
+				curveParams.rect.height
+			);
+			// draw two parts of a curve
+			ctx.beginPath();
+			ctx.moveTo(
+				curveParams.rect.x + curveParams.rect.width * 0.1,
+				curveParams.rect.y + curveParams.rect.height / 2
+			);
+			ctx.quadraticCurveTo(
+				curveParams.rect.x + curveParams.rect.width * 0.3, 
+				curveParams.rect.y + curveParams.rect.height * 0,
+				curveParams.rect.x + curveParams.rect.width * 0.5, 
+				curveParams.rect.y + curveParams.rect.height * 0.5				
+			);
+			ctx.quadraticCurveTo(
+				curveParams.rect.x + curveParams.rect.width * 0.7, 
+				curveParams.rect.y + curveParams.rect.height * 1,
+				curveParams.rect.x + curveParams.rect.width * 0.9, 
+				curveParams.rect.y + curveParams.rect.height * 0.5				
+			);
+			ctx.stroke();
+			ctx.restore();
+
+			// draw name and mail
+			ctx.font = nameParams.font; 
+			ctx.fillStyle = nameParams.color;
+			ctx.textAlign = "left";
+			ctx.fillText(nameParams.name, size * 0.5, height - 32);
+			ctx.fillText(nameParams.email, size * 0.5, height - 16);
+			
+			// draw logo
+			ctx.drawImage(
+				logo, 
+				curveParams.rect.x + 2 * size, 
+				curveParams.rect.y + curveParams.rect.height + 10,
+				size * 4,
+				size
+			);
+
+			//image
+			ctx.drawImage(
+				logo, 
+				curveParams.rect.x + 2 * size, 
+				curveParams.rect.y + curveParams.rect.height + 10,
+				size * 4,
+				size
+			);		
+
+			// wait until next frame and draw everything again
+			window.requestAnimationFrame(draw);
+		}
+		// register listener to start animation on click
+		document.getElementById("canvasRun").onclick = draw;
+
+	</script>
+</body>
+</html>
